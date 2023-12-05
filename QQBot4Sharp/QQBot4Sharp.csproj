@@ -4,7 +4,25 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<LangVersion>10.0</LangVersion>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Title>QQBot4Sharp</Title>
+		<Description>一个基于 QQ官方机器人API 的 C# .NET Standard 2.1 异步封装库</Description>
+		<PackageProjectUrl>https://github.com/XeronOwO/QQBot4Sharp</PackageProjectUrl>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<RepositoryUrl>https://github.com/XeronOwO/QQBot4Sharp</RepositoryUrl>
+		<PackageTags>QQBot4Sharp;QQBot;QQ;Bot</PackageTags>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+		<None Include="..\LICENSE.txt">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
