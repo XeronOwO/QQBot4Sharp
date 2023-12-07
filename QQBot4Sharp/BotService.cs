@@ -490,6 +490,13 @@ namespace QQBot4Sharp
 		public async Task RespondToInteractionAsync(string interactionID)
 			=> await _botContext.RespondToInteractionAsync(interactionID);
 
+		/// <summary>
+		/// 获取当前用户（机器人）信息
+		/// </summary>
+		/// <returns>用户信息</returns>
+		public async Task<GuildUser> GetCurrentUser()
+			=> await _botContext.GetCurrentUser();
+
 		#endregion
 
 		/// <inheritdoc/>

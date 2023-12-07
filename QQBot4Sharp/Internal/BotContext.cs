@@ -239,6 +239,9 @@ namespace QQBot4Sharp.Internal
 		public async Task RespondToInteractionAsync(string interactionID)
 			=> await PutAsync($"https://api.sgroup.qq.com/interactions/{interactionID}");
 
+		public async Task<GuildUser> GetCurrentUser()
+			=> await GetAsync<GuildUser>("https://api.sgroup.qq.com/users/@me");
+
 		public async Task<List<GuildUser>> GetEmojiReactionAsync(string channelID, string messageID, EmojiType type, string emojiID)
 		{
 			var result = new List<GuildUser>();
