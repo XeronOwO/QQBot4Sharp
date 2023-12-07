@@ -336,8 +336,8 @@ namespace QQBot4Sharp
 		/// <param name="openID">QQ用户的OpenID，可在各类事件中获得</param>
 		/// <returns>上传媒体结果</returns>
 		/// <exception cref="APIException"></exception>
-		public async Task<MediaRes> UploadUserMedia(MediaReq media, string openID)
-			=> await _botContext.UploadUserMedia(media, openID);
+		public async Task<MediaRes> UploadUserMediaAsync(MediaReq media, string openID)
+			=> await _botContext.UploadUserMediaAsync(media, openID);
 
 		/// <summary>
 		/// 上传群媒体
@@ -346,8 +346,8 @@ namespace QQBot4Sharp
 		/// <param name="groupOpenID">群聊的OpenID</param>
 		/// <returns>上传媒体结果</returns>
 		/// <exception cref="APIException"></exception>
-		public async Task<MediaRes> UploadGroupMedia(MediaReq media, string groupOpenID)
-			=> await _botContext.UploadGroupMedia(media, groupOpenID);
+		public async Task<MediaRes> UploadGroupMediaAsync(MediaReq media, string groupOpenID)
+			=> await _botContext.UploadGroupMediaAsync(media, groupOpenID);
 
 		/// <summary>
 		/// 机器人发表表情表态

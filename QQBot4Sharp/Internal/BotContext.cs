@@ -221,10 +221,10 @@ namespace QQBot4Sharp.Internal
 		public async Task<QQMessageRes> SendGroupMessageAsync(QQMessageReq message, string groupOpenID)
 			=> await PostAsync<QQMessageReq, QQMessageRes>($"https://api.sgroup.qq.com/v2/groups/{groupOpenID}/messages", message);
 
-		public async Task<MediaRes> UploadUserMedia(MediaReq media, string openID)
+		public async Task<MediaRes> UploadUserMediaAsync(MediaReq media, string openID)
 			=> await PostAsync<MediaReq, MediaRes>($"https://api.sgroup.qq.com/v2/users/{openID}/files", media);
 
-		public async Task<MediaRes> UploadGroupMedia(MediaReq media, string groupOpenID)
+		public async Task<MediaRes> UploadGroupMediaAsync(MediaReq media, string groupOpenID)
 			=> await PostAsync<MediaReq, MediaRes>($"https://api.sgroup.qq.com/v2/groups/{groupOpenID}/files", media);
 
 		public async Task SetEmojiReactionAsync(string channelID, string messageID, EmojiType type, string emojiID)

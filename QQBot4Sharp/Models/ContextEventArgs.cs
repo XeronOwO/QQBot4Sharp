@@ -59,13 +59,13 @@ namespace QQBot4Sharp.Models
 		public async Task<QQMessageRes> SendGroupMessageAsync(QQMessageReq message, string groupOpenID)
 			=> await BotContext.SendGroupMessageAsync(message, groupOpenID);
 
-		/// <inheritdoc cref="BotService.UploadUserMedia(MediaReq, string)"/>
-		public async Task<MediaRes> UploadUserMedia(MediaReq media, string openID)
-			=> await BotContext.UploadUserMedia(media, openID);
+		/// <inheritdoc cref="BotService.UploadUserMediaAsync(MediaReq, string)"/>
+		public async Task<MediaRes> UploadUserMediaAsync(MediaReq media, string openID)
+			=> await BotContext.UploadUserMediaAsync(media, openID);
 
-		/// <inheritdoc cref="BotService.UploadGroupMedia(MediaReq, string)"/>
-		public async Task<MediaRes> UploadGroupMedia(MediaReq media, string groupOpenID)
-			=> await BotContext.UploadGroupMedia(media, groupOpenID);
+		/// <inheritdoc cref="BotService.UploadGroupMediaAsync(MediaReq, string)"/>
+		public async Task<MediaRes> UploadGroupMediaAsync(MediaReq media, string groupOpenID)
+			=> await BotContext.UploadGroupMediaAsync(media, groupOpenID);
 
 		/// <inheritdoc cref="BotService.SetEmojiReactionAsync(string, string, EmojiType, string)"/>
 		public async Task SetEmojiReactionAsync(string channelID, string messageID, EmojiType type, string emojiID)
