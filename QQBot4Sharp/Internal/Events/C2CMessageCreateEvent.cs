@@ -1,5 +1,5 @@
 ﻿using QQBot4Sharp.Internal.API;
-using QQBot4Sharp.Models.QQ;
+using QQBot4Sharp.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace QQBot4Sharp.Internal.Events
 {
-	internal class C2CMessageCreateEvent : Event
+    internal class C2CMessageCreateEvent : Event
 	{
 		public override async Task HandleAsync(Payload payload)
 		{
@@ -20,7 +20,7 @@ namespace QQBot4Sharp.Internal.Events
 				return;
 			}
 
-			await BotService.SendC2CMessageCreateEventAsync(new(BotContext, payload.Cast<MessageRecv>().Data));
+			await BotService.SendC2CMessageCreateEventAsync(new(BotContext, payload.Cast<QQMessageRecv>().Data));
 		}
 	}
 }

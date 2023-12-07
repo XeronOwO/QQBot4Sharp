@@ -2,8 +2,6 @@
 using QQBot4Sharp.Internal;
 using QQBot4Sharp.Internal.API;
 using QQBot4Sharp.Models;
-using QQBot4Sharp.Models.Guild;
-using QQBot4Sharp.Models.QQ;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -13,14 +11,14 @@ using System.Threading.Tasks;
 
 namespace QQBot4Sharp
 {
-	/// <summary>
-	/// 异步事件处理器
-	/// </summary>
-	/// <typeparam name="TEventArgs">事件参数类型</typeparam>
-	/// <param name="sender">发送者</param>
-	/// <param name="e">事件参数</param>
-	/// <returns>任务</returns>
-	public delegate Task AsyncEventHandler<TEventArgs>(object sender, TEventArgs e);
+    /// <summary>
+    /// 异步事件处理器
+    /// </summary>
+    /// <typeparam name="TEventArgs">事件参数类型</typeparam>
+    /// <param name="sender">发送者</param>
+    /// <param name="e">事件参数</param>
+    /// <returns>任务</returns>
+    public delegate Task AsyncEventHandler<TEventArgs>(object sender, TEventArgs e);
 
 	/// <summary>
 	/// 机器人服务，提供机器人的功能支持
@@ -103,9 +101,9 @@ namespace QQBot4Sharp
 		/// <summary>
 		/// 文字子频道全量消息（私域）<br/>用户在文字子频道内发送的所有聊天消息（私域）
 		/// </summary>
-		public event AsyncEventHandler<Models.Guild.MessageEventArgs> OnMessageCreateAsync;
+		public event AsyncEventHandler<GuildMessageEventArgs> OnMessageCreateAsync;
 
-		internal async Task SendCreateMessageEventAsync(Models.Guild.MessageEventArgs e)
+		internal async Task SendCreateMessageEventAsync(GuildMessageEventArgs e)
 		{
 			try
 			{
@@ -154,9 +152,9 @@ namespace QQBot4Sharp
 		/// <summary>
 		/// 单聊消息<br/>用户在单聊发送消息给机器人
 		/// </summary>
-		public event AsyncEventHandler<Models.QQ.MessageEventArgs> OnC2CMessageCreateAsync;
+		public event AsyncEventHandler<Models.QQ.QQMessageEventArgs> OnC2CMessageCreateAsync;
 
-		internal async Task SendC2CMessageCreateEventAsync(Models.QQ.MessageEventArgs e)
+		internal async Task SendC2CMessageCreateEventAsync(Models.QQ.QQMessageEventArgs e)
 		{
 			try
 			{
@@ -171,9 +169,9 @@ namespace QQBot4Sharp
 		/// <summary>
 		/// 群聊@机器人<br/>用户在群内@机器人发动的消息
 		/// </summary>
-		public event AsyncEventHandler<Models.QQ.MessageEventArgs> OnGroupAtMessageCreateAsync;
+		public event AsyncEventHandler<Models.QQ.QQMessageEventArgs> OnGroupAtMessageCreateAsync;
 
-		internal async Task SendGroupAtMessageCreateEventAsync(Models.QQ.MessageEventArgs e)
+		internal async Task SendGroupAtMessageCreateEventAsync(Models.QQ.QQMessageEventArgs e)
 		{
 			try
 			{
@@ -247,7 +245,7 @@ namespace QQBot4Sharp
 		/// <param name="channalID">文字子频道ID</param>
 		/// <returns>消息</returns>
 		/// <exception cref="APIException"></exception>
-		public async Task<Message> SendChannelMessageAsync(Models.Guild.MessageReq message, string channalID)
+		public async Task<GuildMessage> SendChannelMessageAsync(GuildMessageReq message, string channalID)
 			=> await _botContext.SendChannelMessageAsync(message, channalID);
 
 		/// <summary>
@@ -257,7 +255,7 @@ namespace QQBot4Sharp
 		/// <param name="guildID">用户的ID，需要通过<see cref="CreateDirectMessageSessionAsync(DirectMessageSessionCreateInfo)"/>获取</param>
 		/// <returns>消息</returns>
 		/// <exception cref="APIException"></exception>
-		public async Task<Message> SendDirectMessageAsync(Models.Guild.MessageReq message, string guildID)
+		public async Task<GuildMessage> SendDirectMessageAsync(GuildMessageReq message, string guildID)
 			=> await _botContext.SendDirectMessageAsync(message, guildID);
 
 		/// <summary>
@@ -287,7 +285,7 @@ namespace QQBot4Sharp
 		/// <param name="hideTip">是否隐藏提示小灰条</param>
 		/// <returns></returns>
 		/// <exception cref="APIException"></exception>
-		public async Task DeleteChannelMessageAsync(Message message, bool hideTip = false)
+		public async Task DeleteChannelMessageAsync(GuildMessage message, bool hideTip = false)
 			=> await _botContext.DeleteChannelMessageAsync(message.ChannelID, message.ID, hideTip);
 
 		/// <summary>
@@ -308,7 +306,7 @@ namespace QQBot4Sharp
 		/// <param name="hideTip">是否隐藏提示小灰条</param>
 		/// <returns></returns>
 		/// <exception cref="APIException"></exception>
-		public async Task DeleteDirectMessageAsync(Message message, bool hideTip = false)
+		public async Task DeleteDirectMessageAsync(GuildMessage message, bool hideTip = false)
 			=> await _botContext.DeleteDirectMessageAsync(message.GuildID, message.ID, hideTip);
 
 		/// <summary>
@@ -318,7 +316,7 @@ namespace QQBot4Sharp
 		/// <param name="openID">QQ用户的OpenID，可在各类事件中获得</param>
 		/// <returns>发送消息结果</returns>
 		/// <exception cref="APIException"></exception>
-		public async Task<MessageRes> SendUserMessageAsync(Models.QQ.MessageReq message, string openID)
+		public async Task<QQMessageRes> SendUserMessageAsync(QQMessageReq message, string openID)
 			=> await _botContext.SendUserMessageAsync(message, openID);
 
 		/// <summary>
@@ -328,7 +326,7 @@ namespace QQBot4Sharp
 		/// <param name="groupOpenID">群聊的OpenID</param>
 		/// <returns>发送消息结果</returns>
 		/// <exception cref="APIException"></exception>
-		public async Task<MessageRes> SendGroupMessageAsync(Models.QQ.MessageReq message, string groupOpenID)
+		public async Task<QQMessageRes> SendGroupMessageAsync(QQMessageReq message, string groupOpenID)
 			=> await _botContext.SendGroupMessageAsync(message, groupOpenID);
 
 		/// <summary>
@@ -371,7 +369,7 @@ namespace QQBot4Sharp
 		/// <param name="emojiID">表情ID</param>
 		/// <returns></returns>
 		/// <exception cref="APIException"></exception>
-		public async Task SetEmojiReactionAsync(Message message, EmojiType type, string emojiID)
+		public async Task SetEmojiReactionAsync(GuildMessage message, EmojiType type, string emojiID)
 			=> await _botContext.SetEmojiReactionAsync(message.ChannelID, message.ID, type, emojiID);
 
 		/// <summary>
@@ -393,7 +391,7 @@ namespace QQBot4Sharp
 		/// <param name="emoji">表情</param>
 		/// <returns></returns>
 		/// <exception cref="APIException"></exception>
-		public async Task SetEmojiReactionAsync(Message message, Emoji emoji)
+		public async Task SetEmojiReactionAsync(GuildMessage message, Emoji emoji)
 			=> await _botContext.SetEmojiReactionAsync(message.ChannelID, message.ID, emoji.Type, emoji.ID);
 
 		/// <summary>
@@ -416,7 +414,7 @@ namespace QQBot4Sharp
 		/// <param name="emojiID">表情ID</param>
 		/// <returns></returns>
 		/// <exception cref="APIException"></exception>
-		public async Task DeleteEmojiReactionAsync(Message message, EmojiType type, string emojiID)
+		public async Task DeleteEmojiReactionAsync(GuildMessage message, EmojiType type, string emojiID)
 			=> await _botContext.DeleteEmojiReactionAsync(message.ChannelID, message.ID, type, emojiID);
 
 		/// <summary>
@@ -437,7 +435,7 @@ namespace QQBot4Sharp
 		/// <param name="emoji">表情</param>
 		/// <returns></returns>
 		/// <exception cref="APIException"></exception>
-		public async Task DeleteEmojiReactionAsync(Message message, Emoji emoji)
+		public async Task DeleteEmojiReactionAsync(GuildMessage message, Emoji emoji)
 			=> await _botContext.DeleteEmojiReactionAsync(message.ChannelID, message.ID, emoji.Type, emoji.ID);
 
 		/// <summary>
@@ -449,7 +447,7 @@ namespace QQBot4Sharp
 		/// <param name="emojiID">表情ID</param>
 		/// <returns>用户对象列表，参考 User，会返回 id, username, avatar</returns>
 		/// <exception cref="APIException"></exception>
-		public async Task<List<Models.Guild.User>> GetEmojiReactionAsync(string channelID, string messageID, EmojiType type, string emojiID)
+		public async Task<List<GuildUser>> GetEmojiReactionAsync(string channelID, string messageID, EmojiType type, string emojiID)
 			=> await _botContext.GetEmojiReactionAsync(channelID, messageID, type, emojiID);
 
 		/// <summary>
@@ -460,7 +458,7 @@ namespace QQBot4Sharp
 		/// <param name="emojiID">表情ID</param>
 		/// <returns>用户对象列表，参考 User，会返回 id, username, avatar</returns>
 		/// <exception cref="APIException"></exception>
-		public async Task<List<Models.Guild.User>> GetEmojiReactionAsync(Message message, EmojiType type, string emojiID)
+		public async Task<List<GuildUser>> GetEmojiReactionAsync(GuildMessage message, EmojiType type, string emojiID)
 			=> await _botContext.GetEmojiReactionAsync(message.ChannelID, message.ID, type, emojiID);
 
 		/// <summary>
@@ -471,7 +469,7 @@ namespace QQBot4Sharp
 		/// <param name="emoji">表情</param>
 		/// <returns>用户对象列表，参考 User，会返回 id, username, avatar</returns>
 		/// <exception cref="APIException"></exception>
-		public async Task<List<Models.Guild.User>> GetEmojiReactionAsync(string channelID, string messageID, Emoji emoji)
+		public async Task<List<GuildUser>> GetEmojiReactionAsync(string channelID, string messageID, Emoji emoji)
 			=> await _botContext.GetEmojiReactionAsync(channelID, messageID, emoji.Type, emoji.ID);
 
 		/// <summary>
@@ -481,7 +479,7 @@ namespace QQBot4Sharp
 		/// <param name="emoji">表情</param>
 		/// <returns>用户对象列表，参考 User，会返回 id, username, avatar</returns>
 		/// <exception cref="APIException"></exception>
-		public async Task<List<Models.Guild.User>> GetEmojiReactionAsync(Message message, Emoji emoji)
+		public async Task<List<GuildUser>> GetEmojiReactionAsync(GuildMessage message, Emoji emoji)
 			=> await _botContext.GetEmojiReactionAsync(message.ChannelID, message.ID, emoji.Type, emoji.ID);
 
 		/// <summary>

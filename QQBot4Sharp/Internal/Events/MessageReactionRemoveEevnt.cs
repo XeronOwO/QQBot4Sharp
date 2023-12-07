@@ -1,5 +1,5 @@
 ﻿using QQBot4Sharp.Internal.API;
-using QQBot4Sharp.Models.Guild;
+using QQBot4Sharp.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -20,7 +20,7 @@ namespace QQBot4Sharp.Internal.Events
 				return;
 			}
 
-			await BotService.SendMessageReactionRemoveEventAsync(new(BotContext, payload.Cast<MessageReaction>().Data));
+			await BotService.SendMessageReactionRemoveEventAsync(new(BotContext, payload.Cast<GuildMessageReaction>().Data));
 		}
     }
 }

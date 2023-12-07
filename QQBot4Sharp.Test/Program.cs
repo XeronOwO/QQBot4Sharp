@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace QQBot4Sharp.Test
 {
-	internal class Program
+    internal class Program
 	{
 		private static JObject _jConfig = [];
 
@@ -72,7 +72,7 @@ namespace QQBot4Sharp.Test
 		/// <summary>
 		/// 文字子频道At消息事件
 		/// </summary>
-		private static async Task OnAtMessageCreateAsync(object sender, Models.Guild.AtMessageEventArgs e)
+		private static async Task OnAtMessageCreateAsync(object sender, AtMessageEventArgs e)
 		{
 			// 收到 “@Bot 测试” 消息后，回复 “At测试”
 			if (_atTestRegex.IsMatch(e.Message.Content))
@@ -122,10 +122,10 @@ namespace QQBot4Sharp.Test
 					MessageID = e.Message.ID,
 				});
 				await Task.Delay(delay);
-				var emoji = new Models.Guild.Emoji()
+				var emoji = new Emoji()
 				{
 					ID = "128076",
-					Type = Models.Guild.EmojiType.Emoji,
+					Type = EmojiType.Emoji,
 				};
 				await e.SetEmojiReactionAsync(msg, emoji);
 				await Task.Delay(delay);
@@ -149,7 +149,7 @@ namespace QQBot4Sharp.Test
 			// 收到 “@Bot MarkDown测试” 消息后，进行MarkDown测试
 			if (_atMarkDownTestRegex.IsMatch(e.Message.Content))
 			{
-				var builder = new Models.Guild.MarkDownBuilder();
+				var builder = new MarkDownBuilder();
 				builder.At(e.Message.Author.ID);
 				builder.Text(" MarkDown测试\n");
 				builder.Command("/MarkDown测试");
@@ -163,7 +163,7 @@ namespace QQBot4Sharp.Test
 		/// <summary>
 		/// 频道私信事件
 		/// </summary>
-		private static async Task OnDirectMessageCreateAsync(object sender, Models.Guild.DirectMessageEventArgs e)
+		private static async Task OnDirectMessageCreateAsync(object sender, DirectMessageEventArgs e)
 		{
 			// 收到 “测试” 消息后，回复 “私信测试”
 			if (e.Message.Content == "测试")
@@ -192,7 +192,7 @@ namespace QQBot4Sharp.Test
 		/// <summary>
 		/// 文字子频道全量消息事件（仅私域）
 		/// </summary>
-		private static async Task OnMessageCreateAsync(object sender, Models.Guild.MessageEventArgs e)
+		private static async Task OnMessageCreateAsync(object sender, GuildMessageEventArgs e)
 		{
 			// 收到 “测试” 消息后，回复 “文字频道测试”
 			if (e.Message.Content == "测试")
@@ -208,7 +208,7 @@ namespace QQBot4Sharp.Test
 		/// <summary>
 		/// 消息表态添加事件
 		/// </summary>
-		private static async Task OnMessageReactionAddAsync(object sender, Models.Guild.MessageReactionEventArgs e)
+		private static async Task OnMessageReactionAddAsync(object sender, MessageReactionEventArgs e)
 		{
 			Log.Information("MessageReactionAdd");
 
@@ -218,7 +218,7 @@ namespace QQBot4Sharp.Test
 		/// <summary>
 		/// 消息表态移除事件
 		/// </summary>
-		private static async Task OnMessageReactionRemoveAsync(object sender, Models.Guild.MessageReactionEventArgs e)
+		private static async Task OnMessageReactionRemoveAsync(object sender, MessageReactionEventArgs e)
 		{
 			Log.Information("MessageReactionRemove");
 
@@ -228,7 +228,7 @@ namespace QQBot4Sharp.Test
 		/// <summary>
 		/// 按钮交互
 		/// </summary>
-		private static async Task OnInteractionCreateAsync(object sender, Models.Guild.InteractionEventArgs e)
+		private static async Task OnInteractionCreateAsync(object sender, InteractionEventArgs e)
 		{
 			Log.Information("InteractionCreate");
 
@@ -243,12 +243,12 @@ namespace QQBot4Sharp.Test
 		/// <summary>
 		/// 单聊事件
 		/// </summary>
-		private static async Task OnC2CMessageCreateAsync(object sender, Models.QQ.MessageEventArgs e)
+		private static async Task OnC2CMessageCreateAsync(object sender, Models.QQ.QQMessageEventArgs e)
 		{
 			await e.ReplyAsync(new()
 			{
 				Content = "私聊测试",
-				Type = Models.QQ.MessageType.Text,
+				Type = QQMessageType.Text,
 				MessageID = e.Message.ID,
 			});
 		}
@@ -256,12 +256,12 @@ namespace QQBot4Sharp.Test
 		/// <summary>
 		/// 群聊事件
 		/// </summary>
-		private static async Task OnGroupAtMessageCreateAsync(object sender, Models.QQ.MessageEventArgs e)
+		private static async Task OnGroupAtMessageCreateAsync(object sender, Models.QQ.QQMessageEventArgs e)
 		{
 			await e.ReplyAsync(new()
 			{
 				Content = "群聊测试",
-				Type = Models.QQ.MessageType.Text,
+				Type = QQMessageType.Text,
 				MessageID = e.Message.ID,
 			});
 		}

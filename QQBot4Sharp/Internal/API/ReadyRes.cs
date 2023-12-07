@@ -1,12 +1,12 @@
 ﻿using Newtonsoft.Json;
-using QQBot4Sharp.Models.Guild;
+using QQBot4Sharp.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace QQBot4Sharp.Internal.API
 {
-	internal struct ReadyRes
+    internal struct ReadyRes
 	{
 		[JsonProperty("version")]
 		public int Version;
@@ -15,7 +15,7 @@ namespace QQBot4Sharp.Internal.API
 		public string SessionID;
 
 		[JsonProperty("user")]
-		public User User;
+		public GuildUser User;
 
 		[JsonProperty("shard")]
 		public List<int> Shard;

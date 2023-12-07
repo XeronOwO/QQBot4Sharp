@@ -3,8 +3,6 @@ using Newtonsoft.Json.Linq;
 using QQBot4Sharp.Exceptions;
 using QQBot4Sharp.Internal.API;
 using QQBot4Sharp.Models;
-using QQBot4Sharp.Models.Guild;
-using QQBot4Sharp.Models.QQ;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -202,11 +200,11 @@ namespace QQBot4Sharp.Internal
 
 		#region API
 
-		public async Task<Message> SendChannelMessageAsync(QQBot4Sharp.Models.Guild.MessageReq message, string channalID)
-			=> await PostAsync<QQBot4Sharp.Models.Guild.MessageReq, Message>($"https://api.sgroup.qq.com/channels/{channalID}/messages", message);
+		public async Task<GuildMessage> SendChannelMessageAsync(GuildMessageReq message, string channalID)
+			=> await PostAsync<GuildMessageReq, GuildMessage>($"https://api.sgroup.qq.com/channels/{channalID}/messages", message);
 
-		public async Task<Message> SendDirectMessageAsync(QQBot4Sharp.Models.Guild.MessageReq message, string guildID)
-			=> await PostAsync<QQBot4Sharp.Models.Guild.MessageReq, Message>($"https://api.sgroup.qq.com/dms/{guildID}/messages", message);
+		public async Task<GuildMessage> SendDirectMessageAsync(GuildMessageReq message, string guildID)
+			=> await PostAsync<GuildMessageReq, GuildMessage>($"https://api.sgroup.qq.com/dms/{guildID}/messages", message);
 
 		public async Task<DirectMessageSession> CreateDirectMessageSessionAsync(DirectMessageSessionCreateInfo info)
 			=> await PostAsync<DirectMessageSessionCreateInfo, DirectMessageSession>($"https://api.sgroup.qq.com/users/@me/dms", info);
@@ -217,11 +215,11 @@ namespace QQBot4Sharp.Internal
 		public async Task DeleteDirectMessageAsync(string guildID, string messageID, bool hideTip = false)
 			=> await DeleteAsync($"https://api.sgroup.qq.com/dms/{guildID}/messages/{messageID}?hidetip={hideTip}");
 
-		public async Task<MessageRes> SendUserMessageAsync(QQBot4Sharp.Models.QQ.MessageReq message, string openID)
-			=> await PostAsync<QQBot4Sharp.Models.QQ.MessageReq, MessageRes>($"https://api.sgroup.qq.com/v2/users/{openID}/messages", message);
+		public async Task<QQMessageRes> SendUserMessageAsync(QQMessageReq message, string openID)
+			=> await PostAsync<QQMessageReq, QQMessageRes>($"https://api.sgroup.qq.com/v2/users/{openID}/messages", message);
 
-		public async Task<MessageRes> SendGroupMessageAsync(QQBot4Sharp.Models.QQ.MessageReq message, string groupOpenID)
-			=> await PostAsync<QQBot4Sharp.Models.QQ.MessageReq, MessageRes>($"https://api.sgroup.qq.com/v2/groups/{groupOpenID}/messages", message);
+		public async Task<QQMessageRes> SendGroupMessageAsync(QQMessageReq message, string groupOpenID)
+			=> await PostAsync<QQMessageReq, QQMessageRes>($"https://api.sgroup.qq.com/v2/groups/{groupOpenID}/messages", message);
 
 		public async Task<MediaRes> UploadUserMedia(MediaReq media, string openID)
 			=> await PostAsync<MediaReq, MediaRes>($"https://api.sgroup.qq.com/v2/users/{openID}/files", media);
@@ -241,9 +239,9 @@ namespace QQBot4Sharp.Internal
 		public async Task RespondToInteractionAsync(string interactionID)
 			=> await PutAsync($"https://api.sgroup.qq.com/interactions/{interactionID}");
 
-		public async Task<List<QQBot4Sharp.Models.Guild.User>> GetEmojiReactionAsync(string channelID, string messageID, EmojiType type, string emojiID)
+		public async Task<List<GuildUser>> GetEmojiReactionAsync(string channelID, string messageID, EmojiType type, string emojiID)
 		{
-			var result = new List<QQBot4Sharp.Models.Guild.User>();
+			var result = new List<GuildUser>();
 			ReactionRes res;
 			string cookie = null;
 			int? limit = 50;
