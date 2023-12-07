@@ -36,6 +36,7 @@ namespace QQBot4Sharp.Test
 			bot.OnDirectMessageCreateAsync += OnDirectMessageCreateAsync;
 			bot.OnMessageCreateAsync += OnMessageCreateAsync;
 			bot.OnC2CMessageCreateAsync += OnC2CMessageCreateAsync;
+			bot.OnGroupAtMessageCreateAsync += OnGroupAtMessageCreateAsync;
 			bot.OnMessageReactionAddAsync += OnMessageReactionAddAsync;
 			bot.OnMessageReactionRemoveAsync += OnMessageReactionRemoveAsync;
 			bot.OnInteractionCreateAsync += OnInteractionCreateAsync;
@@ -247,6 +248,19 @@ namespace QQBot4Sharp.Test
 			await e.ReplyAsync(new()
 			{
 				Content = "私聊测试",
+				Type = Models.QQ.MessageType.Text,
+				MessageID = e.Message.ID,
+			});
+		}
+
+		/// <summary>
+		/// 群聊事件
+		/// </summary>
+		private static async Task OnGroupAtMessageCreateAsync(object sender, Models.QQ.MessageEventArgs e)
+		{
+			await e.ReplyAsync(new()
+			{
+				Content = "群聊测试",
 				Type = Models.QQ.MessageType.Text,
 				MessageID = e.Message.ID,
 			});
