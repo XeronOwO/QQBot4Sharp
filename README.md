@@ -47,8 +47,8 @@
 | SendChannelMessageAsync | 发送文字子频道消息<br/>注意：如果消息需要审核，会抛出异常，详见 <a href="https://bot.q.qq.com/wiki/develop/api/openapi/error/error.html#%E9%94%99%E8%AF%AF%E7%A0%81%E5%A4%84%E7%90%86">错误码处理</a> 304023与304024 | 🟢 |
 | CreateDirectMessageSessionAsync | 创建频道私信会话<br/>用于机器人和在同一个频道内的成员创建私信会话。 | 🟢 |
 | SendDirectMessageAsync | 发送频道私信消息，需要先调用<see cref="CreateDirectMessageSessionAsync(DirectMessageSessionCreateInfo)"/>创建私信会话，再调用此接口发送消息，否则会报错<br/>注意：如果消息需要审核，会抛出异常，详见 <a href="https://bot.q.qq.com/wiki/develop/api/openapi/error/error.html#%E9%94%99%E8%AF%AF%E7%A0%81%E5%A4%84%E7%90%86">错误码处理</a> 304023与304024 | 🟢 |
-| UploadUserMedia | 上传富媒体文件（用于单聊） | 🟣 |
-| UploadGroupMedia | 上传富媒体文件（用于群聊） | 🟣 |
+| UploadUserMediaAsync | 上传富媒体文件（用于单聊） | 🟣 |
+| UploadGroupMediaAsync | 上传富媒体文件（用于群聊） | 🟣 |
 | DeleteChannelMessageAsync | 撤回文字子频道消息 | 🟢 |
 | DeleteDirectMessageAsync | 撤回频道私信消息 | 🟢 |
 | SetEmojiReactionAsync | 机器人发表表情表态 | 🟢 |
