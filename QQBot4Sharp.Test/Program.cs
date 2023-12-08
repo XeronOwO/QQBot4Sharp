@@ -71,6 +71,7 @@ namespace QQBot4Sharp.Test
 		private static readonly Regex _atDeleteTestRegex = new("<@![0-9]+> 撤回测试");
 		private static readonly Regex _atEmojiTestRegex = new("<@![0-9]+> 表情测试");
 		private static readonly Regex _atMarkDownTestRegex = new("<@![0-9]+> MarkDown测试");
+		private static readonly Regex _atGuildsRegex = new("<@![0-9]+> 频道列表测试");
 
 		/// <summary>
 		/// 文字子频道At消息事件
@@ -159,6 +160,29 @@ namespace QQBot4Sharp.Test
 				await e.ReplyAsync(new()
 				{
 					Markdown = builder.Build(),
+				});
+			}
+
+			// 收到 “@Bot 频道列表测试” 消息后，回复频道列表
+			// 腾讯你逆大天
+			// 我长这么大第一次见GET请求中带Content的
+			// 不愧是你
+			if (_atGuildsRegex.IsMatch(e.Message.Content))
+			{
+				// 还有一件事
+				// 这API为什么会死循环的啊，已经设置了after，返回的还是一样的内容
+				var guilds = await e.GetGuildsAsync();
+				var sb = new StringBuilder();
+				sb.Append("频道列表：");
+				foreach (var guild in guilds)
+				{
+					sb.Append(guild.Name);
+					sb.Append(' ');
+				}
+				await e.ReplyAsync(new()
+				{
+					Content = sb.ToString(),
+					MessageID = e.Message.ID,
 				});
 			}
 		}

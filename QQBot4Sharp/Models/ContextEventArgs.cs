@@ -122,5 +122,9 @@ namespace QQBot4Sharp.Models
 		/// <inheritdoc cref="BotService.GetCurrentUser"/>
 		public async Task<GuildUser> GetCurrentUser()
 			=> await BotContext.GetCurrentUser();
+
+		/// <inheritdoc cref="BotService.GetGuildsAsync"/>"/>
+		public async Task<List<Guild>> GetGuildsAsync()
+			=> await BotContext.GetGuildsAsync();
 	}
 }

@@ -56,6 +56,7 @@
 | GetEmojiReactionAsync | 获取消息表情表态的用户列表 | 🟢 |
 | RespondToInteractionAsync | 回应交互事件<br/>由于 websocket 推送事件是单向的，开发者收到事件之后，需要进行一次"回应"，告知QQ后台，事件已经收到，否则客户端会一直处于loading状态，直到超时 | 🟣 |
 | GetCurrentUser | 获取当前用户（机器人）信息 | 🟢 |
+| GetGuildsAsync | 获取当前用户（机器人）所加入的频道列表 | 🟤API死循环 |
 | 敬请期待。。。 | 敬请期待。。。 | 🔴 |
 
 </Details>

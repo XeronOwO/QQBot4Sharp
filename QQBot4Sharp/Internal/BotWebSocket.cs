@@ -89,6 +89,8 @@ namespace QQBot4Sharp.Internal
         private void ServerDisconnected(object sender, EventArgs e)
         {
             Log.Information("WebSocket与服务器断开连接");
+
+            // TODO: 自动重连
         }
 
         private async void MessageReceived(object sender, MessageReceivedEventArgs e)

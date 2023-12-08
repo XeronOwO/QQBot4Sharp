@@ -6,6 +6,7 @@ using QQBot4Sharp.Models;
 using Serilog;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Text;
@@ -52,12 +53,55 @@ namespace QQBot4Sharp.Internal
 			//response.EnsureSuccessStatusCode();
 			var str = await response.Content.ReadAsStringAsync();
 			Log.Debug($"HTTP响应 => {str}");
-			var jobj = JObject.Parse(str);
+			var jToken = JToken.Parse(str);
 			var res = new Response<TRes>();
-			if (jobj.ContainsKey("code")) // 尼玛API就不能统一用code、message、data格式吗？？？
+			if (jToken is JObject jObj && jObj.ContainsKey("code")) // 尼玛API就不能统一用code、message、data格式吗？？？
 			{
-				res.Code = jobj["code"].Value<int>();
-				res.Message = jobj["message"].Value<string>();
+				res.Code = jObj["code"].Value<int>();
+				res.Message = jObj["message"].Value<string>();
+				res.Data = default;
+			}
+			else
+			{
+				res.Code = 0;
+				res.Message = "ok";
+				res.Data = JsonConvert.DeserializeObject<TRes>(str);
+			}
+			if (!res.IsSuccess)
+			{
+				throw new APIException(res.Code, res.Message);
+			}
+			return res;
+		}
+
+		public async Task<Response<TRes>> GetAsync<TReq, TRes>(string url, TReq req)
+		{
+			// 腾讯你逆大天
+			// 我长这么大第一次见GET请求中带Content的
+			// 不愧是你
+
+			Log.Debug($"GET {url}");
+			var json = JsonConvert.SerializeObject(req, Formatting.None);
+			Log.Debug($"HTTP请求 <= {json}");
+			var request = new HttpRequestMessage(HttpMethod.Get, url)
+			{
+				Content = new StringContent(json, Encoding.UTF8, "application/json")
+			};
+			foreach (var kv in _httpClient.DefaultRequestHeaders)
+			{
+				request.Headers.Add(kv.Key, kv.Value);
+			}
+			request.Headers.Authorization = new("QQBot", await _accessTokenUpdater.GetAccessTokenAsync());
+			var response = await _httpClient.SendAsync(request);
+			//response.EnsureSuccessStatusCode();
+			var str = await response.Content.ReadAsStringAsync();
+			Log.Debug($"HTTP响应 => {str}");
+			var jToken = JToken.Parse(str);
+			var res = new Response<TRes>();
+			if (jToken is JObject jObj && jObj.ContainsKey("code")) // 尼玛API就不能统一用code、message、data格式吗？？？
+			{
+				res.Code = jObj["code"].Value<int>();
+				res.Message = jObj["message"].Value<string>();
 				res.Data = default;
 			}
 			else
@@ -87,12 +131,12 @@ namespace QQBot4Sharp.Internal
 			//response.EnsureSuccessStatusCode();
 			var str = await response.Content.ReadAsStringAsync();
 			Log.Debug($"HTTP响应 => {str}");
-			var jobj = JObject.Parse(str);
+			var jToken = JObject.Parse(str);
 			var res = new Response<TRes>();
-			if (jobj.ContainsKey("code")) // 尼玛API就不能统一用code、message、data格式吗？？？
+			if (jToken is JObject jObj && jObj.ContainsKey("code")) // 尼玛API就不能统一用code、message、data格式吗？？？
 			{
-				res.Code = jobj["code"].Value<int>();
-				res.Message = jobj["message"].Value<string>();
+				res.Code = jObj["code"].Value<int>();
+				res.Message = jObj["message"].Value<string>();
 				res.Data = default;
 			}
 			else
@@ -233,15 +277,6 @@ namespace QQBot4Sharp.Internal
 		public async Task DeleteEmojiReactionAsync(string channelID, string messageID, EmojiType type, string emojiID)
 			=> await DeleteAsync($"https://api.sgroup.qq.com/channels/{channelID}/messages/{messageID}/reactions/{(uint)type}/{emojiID}");
 
-		private async Task<ReactionRes> GetEmojiReactionAsync(string channelID, string messageID, EmojiType type, string emojiID, string cookie, int? limit)
-			=> await GetAsync<ReactionRes>($"https://api.sgroup.qq.com/channels/{channelID}/messages/{messageID}/reactions/{(uint)type}/{emojiID}?cookie={cookie}&limit={limit}");
-
-		public async Task RespondToInteractionAsync(string interactionID)
-			=> await PutAsync($"https://api.sgroup.qq.com/interactions/{interactionID}");
-
-		public async Task<GuildUser> GetCurrentUser()
-			=> await GetAsync<GuildUser>("https://api.sgroup.qq.com/users/@me");
-
 		public async Task<List<GuildUser>> GetEmojiReactionAsync(string channelID, string messageID, EmojiType type, string emojiID)
 		{
 			var result = new List<GuildUser>();
@@ -258,6 +293,41 @@ namespace QQBot4Sharp.Internal
 
 			return result;
 		}
+
+		private async Task<ReactionRes> GetEmojiReactionAsync(string channelID, string messageID, EmojiType type, string emojiID, string cookie, int? limit)
+			=> await GetAsync<ReactionRes>($"https://api.sgroup.qq.com/channels/{channelID}/messages/{messageID}/reactions/{(uint)type}/{emojiID}?cookie={cookie}&limit={limit}");
+
+		public async Task RespondToInteractionAsync(string interactionID)
+			=> await PutAsync($"https://api.sgroup.qq.com/interactions/{interactionID}");
+
+		public async Task<GuildUser> GetCurrentUser()
+			=> await GetAsync<GuildUser>("https://api.sgroup.qq.com/users/@me");
+
+		public async Task<List<Guild>> GetGuildsAsync()
+		{
+			var result = new List<Guild>();
+			List<Guild> guilds;
+			var limit = 100;
+			var req = new GetGuildUsersReq()
+			{
+				Limit = limit,
+			};
+			while (true)
+			{
+				guilds = await GetGuildsAsync(req);
+				if (guilds.Count == 0)
+				{
+					break;
+				}
+				result.AddRange(guilds);
+				req.After = guilds.Last().ID;
+			}
+
+			return result;
+		}
+
+		private async Task<List<Guild>> GetGuildsAsync(GetGuildUsersReq req)
+			=> await GetAsync<GetGuildUsersReq, List<Guild>>($"https://api.sgroup.qq.com/users/@me/guilds", req);
 
 		#endregion
 

@@ -497,6 +497,13 @@ namespace QQBot4Sharp
 		public async Task<GuildUser> GetCurrentUser()
 			=> await _botContext.GetCurrentUser();
 
+		/// <summary>
+		/// 获取当前用户（机器人）所加入的频道列表
+		/// </summary>
+		/// <returns>频道用户列表</returns>
+		public async Task<List<Guild>> GetGuildsAsync()
+			=> await _botContext.GetGuildsAsync();
+
 		#endregion
 
 		/// <inheritdoc/>
