@@ -18,7 +18,6 @@ namespace QQBot4Sharp.Internal.Events
 
 		public override async Task HandleAsync(Payload payload)
 		{
-			UpdateSerial(payload);
 			if (payload.OpCode != OpCode.Dispatch)
 			{
 				return;
@@ -28,71 +27,18 @@ namespace QQBot4Sharp.Internal.Events
 				return;
 			}
 
-			OnReady(payload.Cast<ReadyRes>());
+			await OnReady(payload.Cast<ReadyRes>());
 
 			await Task.CompletedTask;
 		}
 
-		private int? _serial;
-
-		private void UpdateSerial(Payload payload)
+		private async Task OnReady(Payload<ReadyRes> payload)
 		{
-			lock (this)
-			{
-				if (payload.Serial != null)
-				{
-					_serial = payload.Serial;
-				}
-			}
-		}
+			Log.Information("鉴权成功");
 
-		private CancellationTokenSource _cts;
-
-		private async void OnReady(Payload<ReadyRes> payload)
-		{
-			Log.Information("鉴权成功，开始心跳任务");
-
-			_cts?.Cancel();
-			_cts = new();
-			_ = HeartbeatTask(EventBus.Get<HelloEvent>().HeartbeatInterval - Constants.TimeError, _cts.Token);
+			EventBus.Get<HeartbeatEvent>().Start(payload.Data.SessionID);
 
 			await BotService.SendReadyEventAsync(new(BotContext));
-		}
-
-		private async Task HeartbeatTask(int interval, CancellationToken cancellationToken)
-		{
-			try
-			{
-				while (!cancellationToken.IsCancellationRequested)
-				{
-					await BotWebSocket.SendMessageAsync(new Payload()
-					{
-						OpCode = OpCode.Heartbeat,
-						Data = new JValue(_serial),
-					});
-
-					await Task.Delay(interval, cancellationToken);
-				}
-			}
-			catch (TaskCanceledException)
-			{
-				Log.Information("心跳任务被取消");
-			}
-			catch (Exception e)
-			{
-				Log.Error(e, "心跳任务异常退出");
-			}
-		}
-
-		public override void Dispose()
-		{
-			base.Dispose();
-
-			if (_cts != null)
-			{
-				_cts.Cancel();
-				_cts = null;
-			}
 		}
 	}
 }

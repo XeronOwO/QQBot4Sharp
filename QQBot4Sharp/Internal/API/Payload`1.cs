@@ -23,7 +23,7 @@ namespace QQBot4Sharp.Internal.API
 		/// 下行消息都会有一个序列号，标识消息的唯一性，客户端需要再发送心跳的时候，携带客户端收到的最新的s
 		/// </summary>
 		[JsonProperty("s")]
-		public int? Serial;
+		public int? Seq;
 
 		/// <summary>
 		/// 代表事件类型。主要是用在op为 0 Dispatch 的时候

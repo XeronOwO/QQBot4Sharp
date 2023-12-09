@@ -90,11 +90,34 @@ namespace QQBot4Sharp
 		{
 			try
 			{
-				await OnReadyAsync?.Invoke(this, e);
+				if (OnReadyAsync != null)
+				{
+					await OnReadyAsync.Invoke(this, e);
+				}
 			}
 			catch (Exception ex)
 			{
 				Log.Error(ex, "处理READY事件时发生异常");
+			}
+		}
+
+		/// <summary>
+		/// RESUMED事件（恢复登录态成功后，QQ 后台会下发一个 Resumed Event）
+		/// </summary>
+		public event AsyncEventHandler<ContextEventArgs> OnResumedAsync;
+
+		internal async Task SendResumeEventAsync(ContextEventArgs e)
+		{
+			try
+			{
+				if (OnResumedAsync != null)
+				{
+					await OnResumedAsync.Invoke(this, e);
+				}
+			}
+			catch (Exception ex)
+			{
+				Log.Error(ex, "处理RESUMED事件时发生异常");
 			}
 		}
 
@@ -107,7 +130,10 @@ namespace QQBot4Sharp
 		{
 			try
 			{
-				await OnMessageCreateAsync?.Invoke(this, e);
+				if (OnMessageCreateAsync != null)
+				{
+					await OnMessageCreateAsync.Invoke(this, e);
+				}
 			}
 			catch (Exception ex)
 			{
@@ -124,7 +150,10 @@ namespace QQBot4Sharp
 		{
 			try
 			{
-				await OnAtMessageCreateAsync?.Invoke(this, e);
+				if (OnAtMessageCreateAsync != null)
+				{
+					await OnAtMessageCreateAsync.Invoke(this, e);
+				}
 			}
 			catch (Exception ex)
 			{
@@ -141,7 +170,10 @@ namespace QQBot4Sharp
 		{
 			try
 			{
-				await OnDirectMessageCreateAsync?.Invoke(this, e);
+				if (OnDirectMessageCreateAsync != null)
+				{
+					await OnDirectMessageCreateAsync.Invoke(this, e);
+				}
 			}
 			catch (Exception ex)
 			{
@@ -158,7 +190,10 @@ namespace QQBot4Sharp
 		{
 			try
 			{
-				await OnC2CMessageCreateAsync?.Invoke(this, e);
+				if (OnC2CMessageCreateAsync != null)
+				{
+					await OnC2CMessageCreateAsync.Invoke(this, e);
+				}
 			}
 			catch (Exception ex)
 			{
@@ -175,7 +210,10 @@ namespace QQBot4Sharp
 		{
 			try
 			{
-				await OnGroupAtMessageCreateAsync?.Invoke(this, e);
+				if (OnGroupAtMessageCreateAsync != null)
+				{
+					await OnGroupAtMessageCreateAsync.Invoke(this, e);
+				}
 			}
 			catch (Exception ex)
 			{
@@ -192,7 +230,10 @@ namespace QQBot4Sharp
 		{
 			try
 			{
-				await OnMessageReactionAddAsync?.Invoke(this, e);
+				if (OnMessageReactionAddAsync != null)
+				{
+					await OnMessageReactionAddAsync.Invoke(this, e);
+				}
 			}
 			catch (Exception ex)
 			{
@@ -209,7 +250,10 @@ namespace QQBot4Sharp
 		{
 			try
 			{
-				await OnMessageReactionRemoveAsync?.Invoke(this, e);
+				if (OnMessageReactionRemoveAsync != null)
+				{
+					await OnMessageReactionRemoveAsync.Invoke(this, e);
+				}
 			}
 			catch (Exception ex)
 			{
@@ -226,7 +270,10 @@ namespace QQBot4Sharp
 		{
 			try
 			{
-				await OnInteractionCreateAsync?.Invoke(this, e);
+				if (OnInteractionCreateAsync != null)
+				{
+					await OnInteractionCreateAsync.Invoke(this, e);
+				}
 			}
 			catch (Exception ex)
 			{

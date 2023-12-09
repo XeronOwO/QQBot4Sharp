@@ -9,105 +9,126 @@ using WatsonWebsocket;
 
 namespace QQBot4Sharp.Internal
 {
-    /// <summary>
-    /// 机器人WebSocket，用于处理WebSocket交互（长连接）
-    /// </summary>
-    internal class BotWebSocket : IDisposable
-    {
-        private readonly BotContext _botContext;
+	/// <summary>
+	/// 机器人WebSocket，用于处理WebSocket交互（长连接）
+	/// </summary>
+	internal class BotWebSocket : IDisposable
+	{
+		private readonly BotContext _botContext;
 
-        public BotContext BotContext => _botContext;
+		public BotContext BotContext => _botContext;
 
-        private readonly EventBus _eventBus;
+		private readonly EventBus _eventBus;
 
-        public BotWebSocket(BotContext botContext)
-        {
-            _botContext = botContext;
-            _eventBus = new EventBus(this)
-                .Append<HelloEvent>()
-                .Append<ReadyEvent>()
-                .Append<HeartbeatACKEvent>()
-                .Append<MessageCreateEvent>()
-                .Append<AtMessageCreateEvent>()
-                .Append<DirectMessageCreateEvent>()
-                .Append<C2CMessageCreateEvent>()
-                .Append<GroupAtMessageEvent>()
-                .Append<MessageReactionAddEevnt>()
-                .Append<MessageReactionRemoveEevnt>()
-                .Append<InteractionEvent>()
-                ;
-        }
+		public BotWebSocket(BotContext botContext)
+		{
+			_botContext = botContext;
+			_eventBus = new EventBus(this)
+				.Append<HelloEvent>()
+				.Append<ReadyEvent>()
+				.Append<ResumeEvent>()
+				.Append<HeartbeatEvent>()
+				.Append<HeartbeatACKEvent>()
+				.Append<MessageCreateEvent>()
+				.Append<AtMessageCreateEvent>()
+				.Append<DirectMessageCreateEvent>()
+				.Append<C2CMessageCreateEvent>()
+				.Append<GroupAtMessageEvent>()
+				.Append<MessageReactionAddEevnt>()
+				.Append<MessageReactionRemoveEevnt>()
+				.Append<InteractionEvent>()
+				;
+		}
 
-        #region 通用
+		#region 通用
 
-        private WatsonWsClient _client;
+		private WatsonWsClient _client;
 
-        public async Task StartAsync()
-        {
-            Log.Information("正在启动机器人WebSocket");
+		public async Task StartAsync()
+		{
+			Log.Information("正在启动机器人WebSocket");
 
-            GatewayRes res = await _botContext.GetAsync<GatewayRes>("https://api.sgroup.qq.com/gateway");
-            Log.Information($"正在连接WebSocket：Url={res.Url}");
+			GatewayRes res = await _botContext.GetAsync<GatewayRes>("https://api.sgroup.qq.com/gateway");
+			Log.Information($"正在连接WebSocket：Url={res.Url}");
 
-            _client = new(new(res.Url));
-            _client.ServerConnected += ServerConnected;
-            _client.ServerDisconnected += ServerDisconnected;
-            _client.MessageReceived += MessageReceived;
-            await _client.StartAsync();
-        }
+			_client?.Dispose();
+			_client = new(new(res.Url));
+			_client.ServerConnected += ServerConnected;
+			_client.ServerDisconnected += ServerDisconnected;
+			_client.MessageReceived += MessageReceived;
+			await _client.StartAsync();
+		}
 
-        public async Task StopAsync()
-        {
-            Log.Information("正在停止机器人WebSocket");
+		public async Task StopAsync()
+		{
+			Log.Information("正在停止机器人WebSocket");
 
-            await _client.StopAsync();
-        }
+			await _client.StopAsync();
+		}
 
-        public async Task SendMessageAsync(Payload req)
-        {
-            var data = JsonConvert.SerializeObject(req, Formatting.None);
-            Log.Debug($"WebSocket发送 <= {data}");
-            await _client.SendAsync(Encoding.UTF8.GetBytes(data));
-        }
+		public async Task SendMessageAsync(Payload req)
+		{
+			var data = JsonConvert.SerializeObject(req, Formatting.None);
+			Log.Debug($"WebSocket发送 <= {data}");
+			await _client.SendAsync(Encoding.UTF8.GetBytes(data));
+		}
 
-        public async Task SendMessageAsync<T>(Payload<T> req)
-        {
-            var data = JsonConvert.SerializeObject(req, Formatting.None);
-            Log.Debug($"WebSocket发送 <= {data}");
-            await _client.SendAsync(Encoding.UTF8.GetBytes(data));
-        }
+		public async Task SendMessageAsync<T>(Payload<T> req)
+		{
+			var data = JsonConvert.SerializeObject(req, Formatting.None);
+			Log.Debug($"WebSocket发送 <= {data}");
+			await _client.SendAsync(Encoding.UTF8.GetBytes(data));
+		}
 
-        #endregion
+		#endregion
 
-        #region 事件
+		#region 事件
 
-        private void ServerConnected(object sender, EventArgs e)
-        {
-            Log.Information($"WebSocket连接成功");
-        }
+		private void ServerConnected(object sender, EventArgs e)
+		{
+			Log.Information($"WebSocket连接成功");
+		}
 
-        private void ServerDisconnected(object sender, EventArgs e)
-        {
-            Log.Information("WebSocket与服务器断开连接");
+		private Task reconnectTask;
 
-            // TODO: 自动重连
-        }
+		private void ServerDisconnected(object sender, EventArgs e)
+		{
+			Log.Information("WebSocket与服务器断开连接");
+			_eventBus.Get<HeartbeatEvent>().Stop();
 
-        private async void MessageReceived(object sender, MessageReceivedEventArgs e)
-        {
-            var data = Encoding.UTF8.GetString(e.Data);
-            Log.Debug($"WebSocket接收 => {data}");
-            var payload = JsonConvert.DeserializeObject<Payload>(data);
+			lock (this)
+			{
+				reconnectTask ??= ReconnectTask();
+			}
+		}
 
-            await _eventBus.DispatchAsync(payload);
-        }
+		private async Task ReconnectTask()
+		{
+			var interval = _botContext.Service.CreateInfo.ReconnectInterval;
+			Log.Information($"计划在{interval}毫秒后重连");
+			await Task.Delay(interval);
+			await StartAsync();
+			lock (this)
+			{
+				reconnectTask = null;
+			}
+		}
 
-        #endregion
+		private async void MessageReceived(object sender, MessageReceivedEventArgs e)
+		{
+			var data = Encoding.UTF8.GetString(e.Data);
+			Log.Debug($"WebSocket接收 => {data}");
+			var payload = JsonConvert.DeserializeObject<Payload>(data);
 
-        public void Dispose()
-        {
-            _eventBus.Dispose();
-            _client.Dispose();
-        }
-    }
+			await _eventBus.DispatchAsync(payload);
+		}
+
+		#endregion
+
+		public void Dispose()
+		{
+			_eventBus.Dispose();
+			_client.Dispose();
+		}
+	}
 }

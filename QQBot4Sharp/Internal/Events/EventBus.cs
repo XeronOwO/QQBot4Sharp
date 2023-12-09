@@ -13,6 +13,8 @@ namespace QQBot4Sharp.Internal.Events
 
 		private readonly List<Event> _events;
 
+		public List<Event> Events => _events;
+
 		public EventBus(BotWebSocket botWebSocket)
 		{
 			_botWebSocket = botWebSocket;

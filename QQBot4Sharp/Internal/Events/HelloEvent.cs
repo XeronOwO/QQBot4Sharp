@@ -36,6 +36,19 @@ namespace QQBot4Sharp.Internal.Events
 			_heartbeatInterval = payload.Data.HeartbeatInterval;
 
 			var accessToken = await BotContext.AccessTokenUpdater.GetAccessTokenAsync();
+			var heartbeatEvent = EventBus.Get<HeartbeatEvent>();
+			if (string.IsNullOrEmpty(heartbeatEvent.SessionID))
+			{
+				await ConnectAsync(accessToken);
+			}
+			else
+			{
+				await ReconnectAsync(accessToken, heartbeatEvent.SessionID, heartbeatEvent.Seq);
+			}
+		}
+
+		private async Task ConnectAsync(string accessToken)
+		{
 			await BotWebSocket.SendMessageAsync<IdentifyReq>(new()
 			{
 				OpCode = OpCode.Identify,
@@ -45,6 +58,20 @@ namespace QQBot4Sharp.Internal.Events
 					Intents = Intents.ALL,
 					Shard = new() { 0, 1 },
 					Properties = new(),
+				},
+			});
+		}
+
+		private async Task ReconnectAsync(string accessToken, string sessionID, int? seq)
+		{
+			await BotWebSocket.SendMessageAsync<ResumeReq>(new()
+			{
+				OpCode = OpCode.Resume,
+				Data = new()
+				{
+					Token = $"QQBot {accessToken}",
+					SessionID = sessionID,
+					Seq = seq,
 				},
 			});
 		}
