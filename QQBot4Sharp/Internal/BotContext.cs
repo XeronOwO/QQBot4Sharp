@@ -329,6 +329,9 @@ namespace QQBot4Sharp.Internal
 		private async Task<List<Guild>> GetGuildsAsync(GetGuildUsersReq req)
 			=> await GetAsync<GetGuildUsersReq, List<Guild>>($"https://api.sgroup.qq.com/users/@me/guilds", req);
 
+		public async Task<Guild> GetGuildAsync(string guildID)
+			=> await GetAsync<Guild>($"https://api.sgroup.qq.com/guilds/{guildID}");
+
 		#endregion
 
 		public void Dispose()

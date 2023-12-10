@@ -72,6 +72,7 @@ namespace QQBot4Sharp.Test
 		private static readonly Regex _atEmojiTestRegex = new("<@![0-9]+> 表情测试");
 		private static readonly Regex _atMarkDownTestRegex = new("<@![0-9]+> MarkDown测试");
 		private static readonly Regex _atGuildsRegex = new("<@![0-9]+> 频道列表测试");
+		private static readonly Regex _atGuildRegex = new("<@![0-9]+> 频道测试");
 
 		/// <summary>
 		/// 文字子频道At消息事件
@@ -182,6 +183,17 @@ namespace QQBot4Sharp.Test
 				await e.ReplyAsync(new()
 				{
 					Content = sb.ToString(),
+					MessageID = e.Message.ID,
+				});
+			}
+
+			// 收到 “@Bot 频道测试” 消息后，回复频道信息
+			if (_atGuildRegex.IsMatch(e.Message.Content))
+			{
+				var guild = await e.GetGuildAsync(e.Message.GuildID);
+				await e.ReplyAsync(new()
+				{
+					Content = $"频道ID：{guild.ID}\n频道名称：{guild.Name}\n频道简介：{guild.Description}",
 					MessageID = e.Message.ID,
 				});
 			}

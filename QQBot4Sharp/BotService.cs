@@ -551,6 +551,14 @@ namespace QQBot4Sharp
 		public async Task<List<Guild>> GetGuildsAsync()
 			=> await _botContext.GetGuildsAsync();
 
+		/// <summary>
+		/// 获取频道信息
+		/// </summary>
+		/// <param name="guildID">频道ID</param>
+		/// <returns>频道信息</returns>
+		public async Task<Guild> GetGuildAsync(string guildID)
+			=> await _botContext.GetGuildAsync(guildID);
+
 		#endregion
 
 		/// <inheritdoc/>
