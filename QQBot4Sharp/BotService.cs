@@ -534,6 +534,7 @@ namespace QQBot4Sharp
 		/// </summary>
 		/// <param name="interactionID">交互ID</param>
 		/// <returns></returns>
+		/// <exception cref="APIException"></exception>
 		public Task RespondToInteractionAsync(string interactionID)
 			=> _botContext.RespondToInteractionAsync(interactionID);
 
@@ -541,6 +542,7 @@ namespace QQBot4Sharp
 		/// 获取当前用户（机器人）信息
 		/// </summary>
 		/// <returns>用户信息</returns>
+		/// <exception cref="APIException"></exception>
 		public Task<GuildUser> GetCurrentUserAsync()
 			=> _botContext.GetCurrentUserAsync();
 
@@ -548,6 +550,7 @@ namespace QQBot4Sharp
 		/// 获取当前用户（机器人）所加入的频道列表
 		/// </summary>
 		/// <returns>频道用户列表</returns>
+		/// <exception cref="APIException"></exception>
 		public Task<List<Guild>> GetGuildsAsync()
 			=> _botContext.GetGuildsAsync();
 
@@ -556,6 +559,7 @@ namespace QQBot4Sharp
 		/// </summary>
 		/// <param name="guildID">频道ID</param>
 		/// <returns>频道信息</returns>
+		/// <exception cref="APIException"></exception>
 		public Task<Guild> GetGuildAsync(string guildID)
 			=> _botContext.GetGuildAsync(guildID);
 
