@@ -56,7 +56,7 @@ namespace QQBot4Sharp.Test
 		{
 			Log.Information("Ready");
 
-			var user = await e.Service.GetCurrentUser();
+			var user = await e.Service.GetCurrentUserAsync();
 			Log.Information($"当前用户：[{user.ID}]{user.Username}");
 
 			await Task.CompletedTask;

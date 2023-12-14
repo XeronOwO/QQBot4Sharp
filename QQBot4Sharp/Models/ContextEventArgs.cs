@@ -119,9 +119,9 @@ namespace QQBot4Sharp.Models
 		public Task RespondToInteractionAsync(string interactionID)
 			=> BotContext.RespondToInteractionAsync(interactionID);
 
-		/// <inheritdoc cref="BotService.GetCurrentUser"/>
-		public Task<GuildUser> GetCurrentUser()
-			=> BotContext.GetCurrentUser();
+		/// <inheritdoc cref="BotService.GetCurrentUserAsync"/>
+		public Task<GuildUser> GetCurrentUserAsync()
+			=> BotContext.GetCurrentUserAsync();
 
 		/// <inheritdoc cref="BotService.GetGuildsAsync"/>"/>
 		public Task<List<Guild>> GetGuildsAsync()

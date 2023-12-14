@@ -541,8 +541,8 @@ namespace QQBot4Sharp
 		/// 获取当前用户（机器人）信息
 		/// </summary>
 		/// <returns>用户信息</returns>
-		public Task<GuildUser> GetCurrentUser()
-			=> _botContext.GetCurrentUser();
+		public Task<GuildUser> GetCurrentUserAsync()
+			=> _botContext.GetCurrentUserAsync();
 
 		/// <summary>
 		/// 获取当前用户（机器人）所加入的频道列表

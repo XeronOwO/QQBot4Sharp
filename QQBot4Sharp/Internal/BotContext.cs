@@ -300,7 +300,7 @@ namespace QQBot4Sharp.Internal
 		public async Task RespondToInteractionAsync(string interactionID)
 			=> await PutAsync($"https://api.sgroup.qq.com/interactions/{interactionID}");
 
-		public async Task<GuildUser> GetCurrentUser()
+		public async Task<GuildUser> GetCurrentUserAsync()
 			=> await GetAsync<GuildUser>("https://api.sgroup.qq.com/users/@me");
 
 		public async Task<List<Guild>> GetGuildsAsync()
