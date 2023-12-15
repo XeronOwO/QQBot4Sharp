@@ -130,5 +130,9 @@ namespace QQBot4Sharp.Models
 		/// <inheritdoc cref="BotService.GetGuildAsync(string)"/>
 		public Task<Guild> GetGuildAsync(string guildID)
 			=> BotContext.GetGuildAsync(guildID);
+
+		/// <inheritdoc cref="BotService.GetChannelsAsync(string)"/>
+		public Task<List<Channel>> GetChannelsAsync(string guildID)
+			=> BotContext.GetChannelsAsync(guildID);
 	}
 }

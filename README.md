@@ -58,6 +58,7 @@
 | GetCurrentUserAsync | 获取当前用户（机器人）信息 | 🟢 |
 | GetGuildsAsync | 获取当前用户（机器人）所加入的频道列表 | 🟤API死循环 |
 | GetGuildAsync | 获取指定频道的信息 | 🟢 |
+| GetChannelsAsync | 获取指定频道的所有子频道信息 | 🟢 |
 | 敬请期待。。。 | 敬请期待。。。 | 🔴 |
 
 </Details>
