@@ -74,6 +74,7 @@ namespace QQBot4Sharp.Test
 		private static readonly Regex _atGuildsRegex = new("<@![0-9]+> 频道列表测试");
 		private static readonly Regex _atGuildRegex = new("<@![0-9]+> 频道测试");
 		private static readonly Regex _atChannelRegex = new("<@![0-9]+> 子频道测试");
+		private static readonly Regex _atChannelDetailRegex = new("<@![0-9]+> 子频道详情测试 [0-9]+");
 
 		/// <summary>
 		/// 文字子频道At消息事件
@@ -207,12 +208,27 @@ namespace QQBot4Sharp.Test
 				sb.Append("子频道列表：");
 				foreach (var channel in channels)
 				{
+					sb.Append('[');
+					sb.Append(channel.ID);
+					sb.Append(']');
 					sb.Append(channel.Name);
 					sb.Append(' ');
 				}
 				await e.ReplyAsync(new()
 				{
 					Content = sb.ToString(),
+					MessageID = e.Message.ID,
+				});
+			}
+
+			// 收到 “@Bot 子频道详情测试 ChannelID” 消息后，回复子频道详细信息
+			if (_atChannelDetailRegex.IsMatch(e.Message.Content))
+			{
+				var segments = e.Message.Content.Split(' ');
+				var channel = await e.GetChannelAsync(segments[2]);
+				await e.ReplyAsync(new()
+				{
+					Content = $"子频道ID：{channel.ID}\n子频道名称：{channel.Name}\n子频道类型：{channel.Type}",
 					MessageID = e.Message.ID,
 				});
 			}

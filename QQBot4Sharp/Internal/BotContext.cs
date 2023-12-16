@@ -335,6 +335,9 @@ namespace QQBot4Sharp.Internal
 		public async Task<List<Channel>> GetChannelsAsync(string guildID)
 			=> await GetAsync<List<Channel>>($"https://api.sgroup.qq.com/guilds/{guildID}/channels");
 
+		public async Task<Channel> GetChannelAsync(string channelID)
+			=> await GetAsync<Channel>($"https://api.sgroup.qq.com/channels/{channelID}");
+
 		#endregion
 
 		public void Dispose()
