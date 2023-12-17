@@ -581,6 +581,16 @@ namespace QQBot4Sharp
 		public Task<Channel> GetChannelAsync(string channelID)
 			=> _botContext.GetChannelAsync(channelID);
 
+		/// <summary>
+		/// 创建子频道
+		/// </summary>
+		/// <param name="guildID">频道ID</param>
+		/// <param name="channel">子频道创建信息</param>
+		/// <returns>子频道信息</returns>
+		/// <exception cref="APIException"></exception>
+		public Task<Channel> CreateChannelAsync(string guildID, CreateChannelReq channel)
+			=> _botContext.CreateChannelAsync(guildID, channel);
+
 		#endregion
 
 		/// <inheritdoc/>

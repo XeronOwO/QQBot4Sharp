@@ -60,6 +60,7 @@
 | GetGuildAsync | 获取指定频道的信息 | 🟢 |
 | GetChannelsAsync | 获取指定频道的所有子频道信息 | 🟢 |
 | GetChannelAsync | 获取指定子频道详细信息 | 🟢 |
+| CreateChannelAsync | 创建子频道 | 🟢 |
 | 敬请期待。。。 | 敬请期待。。。 | 🔴 |
 
 </Details>

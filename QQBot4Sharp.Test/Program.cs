@@ -75,6 +75,7 @@ namespace QQBot4Sharp.Test
 		private static readonly Regex _atGuildRegex = new("<@![0-9]+> 频道测试");
 		private static readonly Regex _atChannelRegex = new("<@![0-9]+> 子频道测试");
 		private static readonly Regex _atChannelDetailRegex = new("<@![0-9]+> 子频道详情测试 [0-9]+");
+		private static readonly Regex _atCreateChannelRegex = new("<@![0-9]+> 创建子频道测试");
 
 		/// <summary>
 		/// 文字子频道At消息事件
@@ -229,6 +230,24 @@ namespace QQBot4Sharp.Test
 				await e.ReplyAsync(new()
 				{
 					Content = $"子频道ID：{channel.ID}\n子频道名称：{channel.Name}\n子频道类型：{channel.Type}",
+					MessageID = e.Message.ID,
+				});
+			}
+
+			// 收到 “@Bot 创建子频道测试” 消息后，创建子频道
+			if (_atCreateChannelRegex.IsMatch(e.Message.Content))
+			{
+				var channel = await e.CreateChannelAsync(e.Message.GuildID, new()
+				{
+					Name = "测试子频道",
+					Type = ChannelType.Text,
+					SubType = ChannelSubType.Chat,
+					PrivateType = PrivateType.Public,
+					SpeakPermission = SpeakPermission.All,
+				});
+				await e.ReplyAsync(new()
+				{
+					Content = $"创建子频道ID：{channel.ID}\n子频道名称：{channel.Name}\n子频道类型：{channel.Type}",
 					MessageID = e.Message.ID,
 				});
 			}
