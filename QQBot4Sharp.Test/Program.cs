@@ -75,7 +75,8 @@ namespace QQBot4Sharp.Test
 		private static readonly Regex _atGuildRegex = new("<@![0-9]+> 频道测试");
 		private static readonly Regex _atChannelRegex = new("<@![0-9]+> 子频道测试");
 		private static readonly Regex _atChannelDetailRegex = new("<@![0-9]+> 子频道详情测试 [0-9]+");
-		private static readonly Regex _atCreateChannelRegex = new("<@![0-9]+> 创建子频道测试");
+		private static readonly Regex _atCreateChannelRegex = new("<@![0-9]+> 创建子频道测试 (?<Name>[0-9A-Za-z一-龥]+)");
+		private static readonly Regex _atModifyChannelRegex = new("<@![0-9]+> 修改子频道测试 (?<ID>[0-9]+) (?<Name>[0-9A-Za-z一-龥]+)");
 
 		/// <summary>
 		/// 文字子频道At消息事件
@@ -235,11 +236,12 @@ namespace QQBot4Sharp.Test
 			}
 
 			// 收到 “@Bot 创建子频道测试” 消息后，创建子频道
-			if (_atCreateChannelRegex.IsMatch(e.Message.Content))
+			var match = _atCreateChannelRegex.Match(e.Message.Content);
+			if (match.Success)
 			{
 				var channel = await e.CreateChannelAsync(e.Message.GuildID, new()
 				{
-					Name = "测试子频道",
+					Name = match.Groups["Name"].Value,
 					Type = ChannelType.Text,
 					SubType = ChannelSubType.Chat,
 					PrivateType = PrivateType.Public,
@@ -248,6 +250,28 @@ namespace QQBot4Sharp.Test
 				await e.ReplyAsync(new()
 				{
 					Content = $"创建子频道ID：{channel.ID}\n子频道名称：{channel.Name}\n子频道类型：{channel.Type}",
+					MessageID = e.Message.ID,
+				});
+			}
+
+			// 收到 “@Bot 修改子频道测试 <ID> <Name>” 消息后，修改子频道
+			match = _atModifyChannelRegex.Match(e.Message.Content);
+			if (match.Success)
+			{
+				var id = match.Groups["ID"].Value;
+				var channel = await e.GetChannelAsync(id);
+				var name = match.Groups["Name"].Value;
+				channel = await e.ModifyChannelAsync(id, new()
+				{
+					Name = name,
+					ParentID = channel.ParentID,
+					Position = channel.Position,
+					PrivateType = channel.PrivateType,
+					SpeakPermission = channel.SpeakPermission,
+				});
+				await e.ReplyAsync(new()
+				{
+					Content = $"修改子频道ID：{channel.ID}\n子频道新名称：{channel.Name}",
 					MessageID = e.Message.ID,
 				});
 			}

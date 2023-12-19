@@ -214,6 +214,37 @@ namespace QQBot4Sharp.Internal
 			}
 		}
 
+		public async Task<TRes> PatchAsync<TReq, TRes>(string url, TReq req)
+		{
+			Log.Debug($"PATCH {url}");
+			var json = JsonConvert.SerializeObject(req, Formatting.None);
+			Log.Debug($"HTTP请求 <= {json}");
+			var content = new StringContent(json, Encoding.UTF8, "application/json");
+			var response = await _httpClient.PatchAsync(url, content);
+			//response.EnsureSuccessStatusCode();
+			var str = await response.Content.ReadAsStringAsync();
+			Log.Debug($"HTTP响应 => {str}");
+			var jToken = JObject.Parse(str);
+			var res = new Response<TRes>();
+			if (jToken is JObject jObj && jObj.ContainsKey("code")) // 尼玛API就不能统一用code、message、data格式吗？？？
+			{
+				res.Code = jObj["code"].Value<int>();
+				res.Message = jObj["message"].Value<string>();
+				res.Data = default;
+			}
+			else
+			{
+				res.Code = 0;
+				res.Message = "ok";
+				res.Data = JsonConvert.DeserializeObject<TRes>(str);
+			}
+			if (!res.IsSuccess)
+			{
+				throw new APIException(res.Code, res.Message);
+			}
+			return res;
+		}
+
 		#endregion
 
 		#region 通用
@@ -340,6 +371,9 @@ namespace QQBot4Sharp.Internal
 
 		public async Task<Channel> CreateChannelAsync(string guildID, CreateChannelReq channel)
 			=> await PostAsync<CreateChannelReq, Channel>($"https://api.sgroup.qq.com/guilds/{guildID}/channels", channel);
+
+		public async Task<Channel> ModifyChannelAsync(string channelID, ModifyChannelReq channel)
+			=> await PatchAsync<ModifyChannelReq, Channel>($"https://api.sgroup.qq.com/channels/{channelID}", channel);
 
 		#endregion
 

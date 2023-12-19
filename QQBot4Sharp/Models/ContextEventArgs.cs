@@ -142,5 +142,9 @@ namespace QQBot4Sharp.Models
 		/// <inheritdoc cref="BotService.CreateChannelAsync(string, CreateChannelReq)"/>
 		public Task<Channel> CreateChannelAsync(string guildID, CreateChannelReq channel)
 			=> BotContext.CreateChannelAsync(guildID, channel);
+
+		/// <inheritdoc cref="BotService.ModifyChannelAsync(string, ModifyChannelReq)"/>
+		public Task<Channel> ModifyChannelAsync(string channelID, ModifyChannelReq channel)
+			=> BotContext.ModifyChannelAsync(channelID, channel);
 	}
 }
