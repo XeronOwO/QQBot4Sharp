@@ -21,32 +21,19 @@ namespace QQBot4Sharp.Internal.Events
 			_events = new();
 		}
 
-		public Event Add<T>() where T : Event, new()
+		public Event Add(Type type)
 		{
-			lock (this)
+			if (type.BaseType != typeof(Event))
 			{
-				var @event = new T()
-				{
-					EventBus = this,
-				};
-				_events.Add(@event);
-				return @event;
+				throw new Exception("类型必须继承自Event");
 			}
-		}
-
-		public Event Add(Event @event)
-		{
+			var @event = (Event)Activator.CreateInstance(type);
+			@event.EventBus = this;
 			lock (this)
 			{
 				_events.Add(@event);
-				return @event;
 			}
-		}
-
-		public EventBus Append<T>() where T : Event, new()
-		{
-			Add<T>();
-			return this;
+			return @event;
 		}
 
 		public T Get<T>() where T : Event

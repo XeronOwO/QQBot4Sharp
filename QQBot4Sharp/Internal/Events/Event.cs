@@ -6,7 +6,7 @@ namespace QQBot4Sharp.Internal.Events
 {
     internal abstract class Event : IDisposable
 	{
-		public EventBus EventBus { get; init; }
+		public EventBus EventBus { get; internal set; }
 
 		protected BotWebSocket BotWebSocket => EventBus.BotWebSocket;
 

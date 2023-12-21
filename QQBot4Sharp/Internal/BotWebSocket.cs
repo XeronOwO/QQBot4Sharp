@@ -3,6 +3,8 @@ using QQBot4Sharp.Internal.API;
 using QQBot4Sharp.Internal.Events;
 using Serilog;
 using System;
+using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using WatsonWebsocket;
@@ -23,21 +25,12 @@ namespace QQBot4Sharp.Internal
 		public BotWebSocket(BotContext botContext)
 		{
 			_botContext = botContext;
-			_eventBus = new EventBus(this)
-				.Append<HelloEvent>()
-				.Append<ReadyEvent>()
-				.Append<ResumeEvent>()
-				.Append<HeartbeatEvent>()
-				.Append<HeartbeatACKEvent>()
-				.Append<MessageCreateEvent>()
-				.Append<AtMessageCreateEvent>()
-				.Append<DirectMessageCreateEvent>()
-				.Append<C2CMessageCreateEvent>()
-				.Append<GroupAtMessageEvent>()
-				.Append<MessageReactionAddEevnt>()
-				.Append<MessageReactionRemoveEevnt>()
-				.Append<InteractionEvent>()
-				;
+			_eventBus = new EventBus(this);
+
+			foreach (var eventType in Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsSubclassOf(typeof(Event))))
+			{
+				_eventBus.Add(eventType);
+			}
 		}
 
 		#region 通用
