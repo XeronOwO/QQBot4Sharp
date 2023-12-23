@@ -601,6 +601,15 @@ namespace QQBot4Sharp
 		public Task<Channel> ModifyChannelAsync(string channelID, ModifyChannelReq channel)
 			=> _botContext.ModifyChannelAsync(channelID, channel);
 
+		/// <summary>
+		/// 删除子频道
+		/// </summary>
+		/// <param name="channelID">子频道ID</param>
+		/// <returns></returns>
+		/// <exception cref="APIException"></exception>
+		public Task DeleteChannelAsync(string channelID)
+			=> _botContext.DeleteChannelAsync(channelID);
+
 		#endregion
 
 		/// <inheritdoc/>

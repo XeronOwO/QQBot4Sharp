@@ -375,6 +375,9 @@ namespace QQBot4Sharp.Internal
 		public async Task<Channel> ModifyChannelAsync(string channelID, ModifyChannelReq channel)
 			=> await PatchAsync<ModifyChannelReq, Channel>($"https://api.sgroup.qq.com/channels/{channelID}", channel);
 
+		public async Task DeleteChannelAsync(string channelID)
+			=> await DeleteAsync($"https://api.sgroup.qq.com/channels/{channelID}");
+
 		#endregion
 
 		public void Dispose()

@@ -77,6 +77,7 @@ namespace QQBot4Sharp.Test
 		private static readonly Regex _atChannelDetailRegex = new("<@![0-9]+> 子频道详情测试 [0-9]+");
 		private static readonly Regex _atCreateChannelRegex = new("<@![0-9]+> 创建子频道测试 (?<Name>[0-9A-Za-z一-龥]+)");
 		private static readonly Regex _atModifyChannelRegex = new("<@![0-9]+> 修改子频道测试 (?<ID>[0-9]+) (?<Name>[0-9A-Za-z一-龥]+)");
+		private static readonly Regex _atDeleteChannelRegex = new("<@![0-9]+> 删除子频道测试 (?<ID>[0-9]+)");
 
 		/// <summary>
 		/// 文字子频道At消息事件
@@ -272,6 +273,20 @@ namespace QQBot4Sharp.Test
 				await e.ReplyAsync(new()
 				{
 					Content = $"修改子频道ID：{channel.ID}\n子频道新名称：{channel.Name}",
+					MessageID = e.Message.ID,
+				});
+			}
+
+			// 收到 “@Bot 删除子频道测试 <ID>” 消息后，删除子频道
+			match = _atDeleteChannelRegex.Match(e.Message.Content);
+			if (match.Success)
+			{
+				var id = match.Groups["ID"].Value;
+				var channel = await e.GetChannelAsync(id);
+				await e.DeleteChannelAsync(id);
+				await e.ReplyAsync(new()
+				{
+					Content = $"删除子频道ID：{channel.ID}\n子频道名称：{channel.Name}",
 					MessageID = e.Message.ID,
 				});
 			}
