@@ -352,6 +352,10 @@ namespace QQBot4Sharp.Internal
 				}
 				result.AddRange(guilds);
 				req.After = guilds.Last().ID;
+
+				// TODO: 修复死循环BUG
+				break;
+				// END TODO
 			}
 
 			return result;
