@@ -34,6 +34,9 @@
 | OnMessageReactionAddAsync | 用户对消息进行表情表态时 | 🟢 |
 | OnMessageReactionRemoveAsync | 用户对消息进行取消表情表态时 | 🟢 |
 | OnInteractionCreateAsync | 用户点击了消息体的回调按钮 | 🟣 |
+| OnGuildCreateAsync | 机器人被加入到某个频道的时候 | 🟢 |
+| OnGuildUpdateAsync | 频道信息变更 | 🟢 |
+| OnGuildDeleteAsync | 频道被解散、机器人被移除 | 🟢 |
 | 敬请期待。。。 | 敬请期待。。。 | 🔴 |
 
 </Details>

@@ -40,6 +40,7 @@ namespace QQBot4Sharp.Test
 			bot.OnMessageReactionAddAsync += OnMessageReactionAddAsync;
 			bot.OnMessageReactionRemoveAsync += OnMessageReactionRemoveAsync;
 			bot.OnInteractionCreateAsync += OnInteractionCreateAsync;
+			bot.OnGuildUpdateAsync += OnGuildUpdateAsync;
 
 			// 启动和停止
 			await bot.StartAsync();
@@ -366,6 +367,13 @@ namespace QQBot4Sharp.Test
 
 			// 由于 websocket 推送事件是单向的，开发者收到事件之后，需要进行一次"回应"，告知QQ后台，事件已经收到，否则客户端会一直处于loading状态，直到超时。
 			await e.RespondToInteractionAsync(e.Interaction.ID);
+		}
+
+		private static async Task OnGuildUpdateAsync(object sender, GuildUpdateEventArgs e)
+		{
+			Log.Information("GuildUpdate");
+
+			await Task.CompletedTask;
 		}
 
 		#endregion

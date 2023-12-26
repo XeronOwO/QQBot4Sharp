@@ -281,6 +281,66 @@ namespace QQBot4Sharp
 			}
 		}
 
+		/// <summary>
+		/// 机器人被加入到某个频道的时候
+		/// </summary>
+		public event AsyncEventHandler<GuildCreateEventArgs> OnGuildCreateAsync;
+
+		internal async Task SendGuildCreateEventAsync(GuildCreateEventArgs e)
+		{
+			try
+			{
+				if (OnGuildCreateAsync != null)
+				{
+					await OnGuildCreateAsync.Invoke(this, e);
+				}
+			}
+			catch (Exception ex)
+			{
+				Log.Error(ex, "处理GUILD_CREATE事件时发生异常");
+			}
+		}
+
+		/// <summary>
+		/// - 频道信息变更<br/>- 事件内容为变更后的数据
+		/// </summary>
+		public event AsyncEventHandler<GuildUpdateEventArgs> OnGuildUpdateAsync;
+
+		internal async Task SendGuildUpdateEventAsync(GuildUpdateEventArgs e)
+		{
+			try
+			{
+				if (OnGuildUpdateAsync != null)
+				{
+					await OnGuildUpdateAsync.Invoke(this, e);
+				}
+			}
+			catch (Exception ex)
+			{
+				Log.Error(ex, "处理GUILD_UPDATE事件时发生异常");
+			}
+		}
+
+		/// <summary>
+		/// - 频道被解散<br/>- 机器人被移除<br/>- 事件内容为变更前的数据
+		/// </summary>
+		public event AsyncEventHandler<GuildDeleteEventArgs> OnGuildDeleteAsync;
+
+		internal async Task SendGuildDeleteEventAsync(GuildDeleteEventArgs e)
+		{
+			try
+			{
+				if (OnGuildDeleteAsync != null)
+				{
+					await OnGuildDeleteAsync.Invoke(this, e);
+				}
+			}
+			catch (Exception ex)
+			{
+				Log.Error(ex, "处理GUILD_DELETE事件时发生异常");
+			}
+		}
+
 		#endregion
 
 		#region API
