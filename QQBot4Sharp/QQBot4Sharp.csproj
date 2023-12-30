@@ -11,7 +11,7 @@
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<RepositoryUrl>https://github.com/XeronOwO/QQBot4Sharp</RepositoryUrl>
 		<PackageTags>QQBot4Sharp;QQBot;QQ;Bot</PackageTags>
-		<Version>1.0.1.0</Version>
+		<Version>1.0.1.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
