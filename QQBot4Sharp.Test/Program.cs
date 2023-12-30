@@ -41,6 +41,7 @@ namespace QQBot4Sharp.Test
 			bot.OnMessageReactionRemoveAsync += OnMessageReactionRemoveAsync;
 			bot.OnInteractionCreateAsync += OnInteractionCreateAsync;
 			bot.OnGuildUpdateAsync += OnGuildUpdateAsync;
+			bot.OnChannelCreateAsync += OnChannelCreateAsync;
 
 			// 启动和停止
 			await bot.StartAsync();
@@ -372,6 +373,13 @@ namespace QQBot4Sharp.Test
 		private static async Task OnGuildUpdateAsync(object sender, GuildUpdateEventArgs e)
 		{
 			Log.Information("GuildUpdate");
+
+			await Task.CompletedTask;
+		}
+
+		private static async Task OnChannelCreateAsync(object sender, ChannelCreateEventArgs e)
+		{
+			Log.Information($"ChannelCreate:[{e.Channel.ID}]{e.Channel.Name}");
 
 			await Task.CompletedTask;
 		}

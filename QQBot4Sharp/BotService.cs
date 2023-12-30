@@ -341,6 +341,66 @@ namespace QQBot4Sharp
 			}
 		}
 
+		/// <summary>
+		/// 子频道被创建
+		/// </summary>
+		public event AsyncEventHandler<ChannelCreateEventArgs> OnChannelCreateAsync;
+
+		internal async Task SendChannelCreateEventAsync(ChannelCreateEventArgs e)
+		{
+			try
+			{
+				if (OnChannelCreateAsync != null)
+				{
+					await OnChannelCreateAsync.Invoke(this, e);
+				}
+			}
+			catch (Exception ex)
+			{
+				Log.Error(ex, "处理CHANNEL_CREATE事件时发生异常");
+			}
+		}
+
+		/// <summary>
+		/// 子频道信息变更
+		/// </summary>
+		public event AsyncEventHandler<ChannelUpdateEventArgs> OnChannelUpdateAsync;
+
+		internal async Task SendChannelUpdateEventAsync(ChannelUpdateEventArgs e)
+		{
+			try
+			{
+				if (OnChannelUpdateAsync != null)
+				{
+					await OnChannelUpdateAsync.Invoke(this, e);
+				}
+			}
+			catch (Exception ex)
+			{
+				Log.Error(ex, "处理CHANNEL_UPDATE事件时发生异常");
+			}
+		}
+
+		/// <summary>
+		/// 子频道被删除
+		/// </summary>
+		public event AsyncEventHandler<ChannelDeleteEventArgs> OnChannelDeleteAsync;
+
+		internal async Task SendChannelDeleteEventAsync(ChannelDeleteEventArgs e)
+		{
+			try
+			{
+				if (OnChannelDeleteAsync != null)
+				{
+					await OnChannelDeleteAsync.Invoke(this, e);
+				}
+			}
+			catch (Exception ex)
+			{
+				Log.Error(ex, "处理CHANNEL_DELETE事件时发生异常");
+			}
+		}
+
 		#endregion
 
 		#region API

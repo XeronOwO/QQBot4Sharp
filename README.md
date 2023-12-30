@@ -37,6 +37,9 @@
 | OnGuildCreateAsync | 机器人被加入到某个频道的时候 | 🟢 |
 | OnGuildUpdateAsync | 频道信息变更 | 🟢 |
 | OnGuildDeleteAsync | 频道被解散、机器人被移除 | 🟢 |
+| OnChannelCreateAsync | 子频道被创建 | 🟢 |
+| OnChannelUpdateAsync | 子频道信息变更 | 🟢 |
+| OnChannelDeleteAsync | 子频道被删除 | 🟢 |
 | 敬请期待。。。 | 敬请期待。。。 | 🔴 |
 
 </Details>
